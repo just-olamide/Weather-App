@@ -1,0 +1,30 @@
+body {
+    margin: 0;
+    background: linear-gradient(to right, #74ebd5, #acb6e5);
+    font-family: 'Segoe UI', sans-serif;
+    transition: background 1s ease;
+  }
+  
+  .weather-box {
+    width: 100%;
+    max-width: 400px;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    color: #fff;
+  }
+  
+  .weather-info h2 {
+    font-size: 1.8rem;
+  }
+  
+  .weather-info p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+  }
+  
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+  
