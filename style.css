@@ -1,4 +1,4 @@
-body {
+/* body {
     margin: 0;
     background: linear-gradient(to right, #74ebd5, #acb6e5);
     font-family: 'Segoe UI', sans-serif;
@@ -26,5 +26,38 @@ body {
   .spinner-border {
     width: 3rem;
     height: 3rem;
+  }
+   */
+
+   body {
+    background-color: #f2f7fd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  #hourlyForecast .card,
+  #weeklyForecast .card {
+    margin-bottom: 1rem;
+  }
+
+  body.dark-mode {
+    background-color: #1a1a2e;
+    color: #f0f0f0;
+  }
+  
+  .dark-mode .card {
+    background-color: #2e2e3a;
+    color: white;
+  }
+  
+  .dark-mode input,
+  .dark-mode .form-control,
+  .dark-mode .btn {
+    background-color: #333;
+    color: white;
   }
   
