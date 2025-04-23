@@ -1,232 +1,193 @@
-// async function getWeather() {
-//     const city = document.getElementById("cityInput").value;
-//     const apiKey = "29d6b77e2749f8ff8620d2f6b1a10515";
-//     const weatherCard = document.getElementById("weatherCard");
-//     const loader = document.getElementById("loader");
-  
-//     if (!city) {
-//       weatherCard.innerHTML = `<p class="text-warning">Please enter a city name.</p>`;
-//       return;
-//     }
-  
-//     loader.classList.remove("d-none");
-//     weatherCard.innerHTML = "";
-  
-//     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-  
-//     try {
-//       const res = await fetch(url);
-//       const data = await res.json();
-  
-//       loader.classList.add("d-none");
-  
-//       if (data.cod === "404") {
-//         weatherCard.innerHTML = `<p class="text-danger">City not found.</p>`;
-//         return;
-//       }
-  
-//       const { name } = data;
-//       const { country } = data.sys;
-//       const { temp, humidity } = data.main;
-//       const { speed } = data.wind;
-//       const { main, icon } = data.weather[0];
-  
-//       document.body.style.background = getWeatherBackground(main);
-  
-//       weatherCard.innerHTML = `
-//         <h2>${name}, ${country}</h2>
-//         <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${main}" />
-//         <p><i class="fas fa-temperature-low"></i> ${temp}°C</p>
-//         <p><i class="fas fa-cloud"></i> ${main}</p>
-//         <p><i class="fas fa-wind"></i> Wind: ${speed} m/s</p>
-//         <p><i class="fas fa-tint"></i> Humidity: ${humidity}%</p>
-//       `;
-//     } catch (err) {
-//       loader.classList.add("d-none");
-//       weatherCard.innerHTML = `<p class="text-danger">Error fetching weather data.</p>`;
-//     }
-//   }
-  
-//   function getWeatherBackground(condition) {
-//     switch (condition.toLowerCase()) {
-//       case "clear":
-//         return "linear-gradient(to right, #56ccf2, #2f80ed)";
-//       case "clouds":
-//         return "linear-gradient(to right, #bdc3c7, #2c3e50)";
-//       case "rain":
-//         return "linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6)";
-//       case "snow":
-//         return "linear-gradient(to right, #83a4d4, #b6fbff)";
-//       case "thunderstorm":
-//         return "linear-gradient(to right, #373b44, #4286f4)";
-//       default:
-//         return "linear-gradient(to right, #74ebd5, #acb6e5)";
-//     }
-//   }
-  
-<lord-icon id="weatherIcon"
-    src="https://cdn.lordicon.com/dnmvmpfk.json"
-    trigger="loop"
-    style="width:60px;height:60px">
-</lord-icon>
-
-
-
-let currentUnit = "metric"; // or 'imperial'
-let lastCity = null;
-
-// Save and load user name
-function promptUserName() {
-  const name = prompt("Enter your name:");
-  if (name) {
-    localStorage.setItem("weatherUsername", name);
-    document.getElementById("username").textContent = name;
-  }
-}
-
-function loadUserName() {
-  const savedName = localStorage.getItem("weatherUsername");
-  if (savedName) {
-    document.getElementById("username").textContent = savedName;
-  }
-}
-
-window.onload = loadUserName;
-
-// Get weather data (API integration to be added next)
-function getWeather() {
-  const city = document.getElementById("cityInput").value.trim();
-  if (!city) return alert("Please enter a city name");
-
-  // TODO: Call weather API here
-  console.log("Fetch weather for:", city);
-}
-
 const apiKey = "29d6b77e2749f8ff8620d2f6b1a10515";
-
-// Get weather data from OpenWeatherMap
-async function getWeather() {
-  const city = document.getElementById("cityInput").value.trim();
-  if (!city) return alert("Please enter a city name");
-  
-  try {
-    const geoRes = await fetch(
-      `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${apiKey}`
-    );
-    const geoData = await geoRes.json();
-    if (!geoData.length) return alert("City not found");
-
-    const { lat, lon, name } = geoData[0];
-const weatherRes = await fetch(
-    `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=${currentUnit}&appid=${apiKey}`
-    
-    );
-    const data = await weatherRes.json();
-
-    updateCurrentWeather(data.current, name);
-    updateHourlyForecast(data.hourly);
-    updateWeeklyForecast(data.daily);
-
-    document.getElementById("weatherCard").classList.remove("d-none");
-  } catch (error) {
-    console.error("Weather fetch error:", error);
-    alert("Failed to fetch weather data.");
-  }
-}
-
-// Update main weather card
-function updateCurrentWeather(current, cityName) {
-  document.getElementById("temperature").textContent = Math.round(current.temp);
-  document.getElementById("feelsLike").textContent = Math.round(current.feels_like);
-  document.getElementById("humidity").textContent = current.humidity;
-  document.getElementById("windSpeed").textContent = current.wind_speed;
-  document.getElementById("cityName").textContent = cityName;
-  document.getElementById("description").textContent = current.weather[0].main;
-
-  const icon = current.weather[0].icon;
-  // document.getElementById("weatherIcon").src = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-  const iconMap = {
-    "01d": "https://cdn.lordicon.com/dnmvmpfk.json", // sunny
-    "01n": "https://cdn.lordicon.com/dnmvmpfk.json", // moon
-    "02d": "https://cdn.lordicon.com/osuxyevn.json", // partly cloudy
-    "03d": "https://cdn.lordicon.com/osuxyevn.json", // cloudy
-    "04d": "https://cdn.lordicon.com/osuxyevn.json",
-    "09d": "https://cdn.lordicon.com/kndkiwmf.json", // rain
-    "10d": "https://cdn.lordicon.com/kndkiwmf.json",
-    "11d": "https://cdn.lordicon.com/nlzvfzjg.json", // thunder
-    "13d": "https://cdn.lordicon.com/tyounuzx.json", // snow
-    "50d": "https://cdn.lordicon.com/wzrwaorf.json"  // fog
-  };
-  
-  document.getElementById("weatherIcon").setAttribute("src", iconMap[icon] || iconMap["01d"]);
-  
-}
-
-// Update hourly forecast (next 6 hours)
-function updateHourlyForecast(hourly) {
-  const container = document.getElementById("hourlyForecast");
-  container.innerHTML = "";
-
-  for (let i = 0; i < 6; i++) {
-    const hour = hourly[i];
-    const date = new Date(hour.dt * 1000);
-    const time = i === 0 ? "Now" : date.getHours() + ":00";
-
-    const card = `
-      <div class="col-4 col-md-2">
-        <div class="card p-2 text-center">
-          <img src="https://openweathermap.org/img/wn/${hour.weather[0].icon}.png" style="width: 40px;" />
-          <div class="fw-bold">${time}</div>
-          <div>${Math.round(hour.temp)}°C</div>
-        </div>
-      </div>`;
-    container.innerHTML += card;
-  }
-}
-
-// Update weekly forecast (next 6 days)
-function updateWeeklyForecast(daily) {
-  const container = document.getElementById("weeklyForecast");
-  container.innerHTML = "";
-
-  for (let i = 1; i <= 6; i++) {
-    const day = daily[i];
-    const date = new Date(day.dt * 1000);
-    const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
-
-    const card = `
-      <div class="col-6 col-md-2">
-        <div class="card p-2 text-center">
-          <img src="https://openweathermap.org/img/wn/${day.weather[0].icon}.png" style="width: 40px;" />
-          <div class="fw-bold">${weekday}</div>
-          <div>${Math.round(day.temp.day)}°C</div>
-        </div>
-      </div>`;
-    container.innerHTML += card;
-  }
-}
-function toggleUnits() {
-  const toggle = document.getElementById("unitToggle");
-  currentUnit = toggle.checked ? "imperial" : "metric";
-  document.querySelector(".form-check-label").textContent = toggle.checked ? "Show °C" : "Show °F";
-  
-  if (lastCity) {
-    document.getElementById("cityInput").value = lastCity;
-    getWeather();
-  }
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-}
-
-function loadDarkMode() {
-  const isDark = localStorage.getItem("darkMode") === "true";
-  if (isDark) document.body.classList.add("dark-mode");
-}
+const searchInput = document.getElementById("searchInput");
+let debounceTimer;
 
 window.onload = () => {
-  loadUserName();
-  loadDarkMode();
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
+      fetchWeatherByCoords(latitude, longitude);
+    }, error => {
+      console.error("Geolocation error:", error);
+    });
+  }
 };
+
+searchInput.addEventListener("input", function () {
+  clearTimeout(debounceTimer);
+  const query = searchInput.value.trim();
+  if (query.length < 2) return clearSuggestions();
+
+  debounceTimer = setTimeout(() => fetchCitySuggestions(query), 300);
+});
+
+searchInput.addEventListener("keypress", function (e) {
+  if (e.key === "Enter") {
+    const city = searchInput.value.trim();
+    if (city !== "") {
+      clearSuggestions();
+      fetchWeatherData(city);
+    }
+  }
+});
+
+function toggleLoader(show) {
+  let loader = document.getElementById("loader");
+  if (!loader) {
+    loader = document.createElement("div");
+    loader.id = "loader";
+    loader.innerHTML = `
+      <div class="text-center py-4">
+        <div class="spinner-border text-light" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    `;
+    document.querySelector(".container").prepend(loader);
+  }
+  loader.style.display = show ? "block" : "none";
+}
+
+function clearSuggestions() {
+  const box = document.getElementById("suggestions");
+  if (box) box.remove();
+}
+
+async function fetchCitySuggestions(query) {
+  try {
+    const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`);
+    const cities = await res.json();
+
+    clearSuggestions();
+    const box = document.createElement("div");
+    box.id = "suggestions";
+    box.className = "dropdown-menu show position-absolute w-100";
+
+    cities.forEach((city) => {
+      const option = document.createElement("button");
+      option.className = "dropdown-item";
+      option.type = "button";
+      option.textContent = `${city.name}, ${city.country}`;
+      option.onclick = () => {
+        searchInput.value = city.name;
+        clearSuggestions();
+        fetchWeatherData(city.name);
+      };
+      box.appendChild(option);
+    });
+
+    searchInput.parentNode.appendChild(box);
+  } catch (error) {
+    console.error("Suggestion error:", error);
+  }
+}
+
+async function fetchWeatherData(city) {
+  toggleLoader(true);
+  try {
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`
+    );
+    if (!response.ok) throw new Error("City not found");
+
+    const data = await response.json();
+    renderCurrentWeather(data);
+    renderForecast(data);
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    toggleLoader(false);
+  }
+}
+
+async function fetchWeatherByCoords(lat, lon) {
+  toggleLoader(true);
+  try {
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+    );
+    const data = await response.json();
+    renderCurrentWeather(data);
+    renderForecast(data);
+  } catch (error) {
+    alert("Failed to get weather from location");
+  } finally {
+    toggleLoader(false);
+  }
+}
+
+function renderCurrentWeather(data) {
+  const location = document.getElementById("location");
+  const temperature = document.getElementById("temperature");
+  const condition = document.getElementById("condition");
+  const highLow = document.getElementById("high-low");
+
+  const current = data.list[0];
+  location.textContent = data.city.name;
+  temperature.innerHTML = `${Math.round(current.main.temp)}&deg;`;
+  condition.textContent = current.weather[0].main;
+  highLow.textContent = `L:${Math.round(current.main.temp_min)}° H:${Math.round(current.main.temp_max)}°`;
+}
+
+function renderForecast(data) {
+  const hourlyContainer = document.getElementById("hourlyForecast");
+  const dailyContainer = document.getElementById("dailyForecast");
+  hourlyContainer.innerHTML = "";
+  dailyContainer.innerHTML = "";
+
+  // One concise summary
+  let summarySet = new Set();
+  for (let i = 0; i < 6; i++) {
+    const desc = data.list[i].weather[0].description;
+    summarySet.add(desc);
+  }
+  const summary = Array.from(summarySet).join(", ");
+  const summaryText = summary.length > 120 ? summary.slice(0, 120) + "..." : summary;
+
+  hourlyContainer.innerHTML += `
+    <div class="mb-3 text-light" style="font-size: 0.9rem; text-align: center;">
+      <em>${summaryText.charAt(0).toUpperCase() + summaryText.slice(1)} expected over the next few hours.</em>
+    </div>
+  `;
+
+  // Hourly forecast blocks
+  for (let i = 0; i < 6; i++) {
+    const hour = data.list[i];
+    const time = new Date(hour.dt * 1000).getHours();
+    const temp = Math.round(hour.main.temp);
+    const icon = hour.weather[0].icon;
+
+    hourlyContainer.innerHTML += `
+      <div class="hour-block mx-2 text-center">
+        <p class="mb-1">${time}:00</p>
+        <img src="https://openweathermap.org/img/wn/${icon}@2x.png" width="40">
+        <p>${temp}&deg;</p>
+      </div>
+    `;
+  }
+
+  // Daily forecast
+  const days = {};
+  data.list.forEach((item) => {
+    const date = new Date(item.dt_txt).toLocaleDateString();
+    if (!days[date]) days[date] = [];
+    days[date].push(item);
+  });
+
+  const dailyKeys = Object.keys(days).slice(0, 7);
+  dailyKeys.forEach((date) => {
+    const dayData = days[date];
+    const temps = dayData.map(d => d.main.temp);
+    const min = Math.round(Math.min(...temps));
+    const max = Math.round(Math.max(...temps));
+    const icon = dayData[0].weather[0].icon;
+    const day = new Date(date).toLocaleDateString("en-US", { weekday: "short" });
+
+    dailyContainer.innerHTML += `
+      <div class="col-12 d-flex justify-content-between py-2 border-bottom">
+        <span>${day}</span>
+        <span><img src="https://openweathermap.org/img/wn/${icon}.png" width="30"> ${min}&deg; / ${max}&deg;</span>
+      </div>
+    `;
+  });
+}

@@ -1,63 +1,77 @@
-/* body {
-    margin: 0;
-    background: linear-gradient(to right, #74ebd5, #acb6e5);
-    font-family: 'Segoe UI', sans-serif;
-    transition: background 1s ease;
-  }
-  
-  .weather-box {
-    width: 100%;
-    max-width: 400px;
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    color: #fff;
-  }
-  
-  .weather-info h2 {
-    font-size: 1.8rem;
-  }
-  
-  .weather-info p {
-    margin: 0.5rem 0;
-    font-size: 1.1rem;
-  }
-  
-  .spinner-border {
-    width: 3rem;
-    height: 3rem;
-  }
-   */
 
-   body {
-    background-color: #f2f7fd;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .card {
-    border-radius: 1rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  #hourlyForecast .card,
-  #weeklyForecast .card {
-    margin-bottom: 1rem;
-  }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom, #1f3131);
+  color: white;
+  min-height: 100vh;
+}
 
-  body.dark-mode {
-    background-color: #1a1a2e;
-    color: #f0f0f0;
-  }
-  
-  .dark-mode .card {
-    background-color: #2e2e3a;
-    color: white;
-  }
-  
-  .dark-mode input,
-  .dark-mode .form-control,
-  .dark-mode .btn {
-    background-color: #333;
-    color: white;
-  }
-  
+input#searchInput {
+  background-color: #555;
+  color: white;
+  border: none;
+}
+
+input#searchInput::placeholder {
+  color: #555;
+}
+
+.card {
+  border: none;
+  box-shadow: white;
+}
+
+.hour-block {
+  min-width: 60px;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.hour-block p {
+  margin: 0;
+}
+
+#dailyForecast .col-12 {
+  border-color: white;
+  font-size: 1rem;
+}
+
+#temperature {
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+#condition {
+  font-size: 1.25rem;
+  color: white;
+}
+
+#high-low {
+  font-size: 0.9rem;
+  color: white;
+}
+
+::-webkit-scrollbar {
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+}
+input#searchInput::placeholder {
+  color: #ccc;
+  opacity: 1;
+}
+#hourlyForecast{
+  color: #ccc;
+  font-weight: 100px;
+}
+#dailyForecast{
+  color: #ccc;
+  font-weight: 100px;
+}
