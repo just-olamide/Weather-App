@@ -4,12 +4,45 @@ let debounceTimer;
 
 window.onload = () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-      fetchWeatherByCoords(latitude, longitude);
-    }, error => {
-      console.error("Geolocation error:", error);
-    });
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0,
+    };
+
+    navigator.geolocation.getCurrentPosition(
+      // Success callback
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        fetchWeatherByCoords(latitude, longitude);
+      },
+      // Error callback
+      (error) => {
+        console.error("Geolocation error:", error);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            alert("Please enable location access to see your local weather.");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            alert(
+              "Location information unavailable. Please search for your city."
+            );
+            break;
+          case error.TIMEOUT:
+            alert("Location request timed out. Please search for your city.");
+            break;
+          default:
+            alert(
+              "An error occurred getting your location. Please search for your city."
+            );
+        }
+      },
+      options
+    );
+  } else {
+    alert(
+      "Geolocation is not supported by your browser. Please search for your city."
+    );
   }
 };
 
@@ -55,7 +88,9 @@ function clearSuggestions() {
 
 async function fetchCitySuggestions(query) {
   try {
-    const res = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`);
+    const res = await fetch(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&appid=${apiKey}`
+    );
     const cities = await res.json();
 
     clearSuggestions();
@@ -126,29 +161,31 @@ function renderCurrentWeather(data) {
   location.textContent = data.city.name;
   temperature.innerHTML = `${Math.round(current.main.temp)}&deg;`;
   condition.textContent = current.weather[0].main;
-  highLow.textContent = `L:${Math.round(current.main.temp_min)}° H:${Math.round(current.main.temp_max)}°`;
+  highLow.textContent = `L:${Math.round(current.main.temp_min)}° H:${Math.round(
+    current.main.temp_max
+  )}°`;
 }
 
 function renderForecast(data) {
   const hourlyContainer = document.getElementById("hourlyForecast");
   const dailyContainer = document.getElementById("dailyForecast");
+  const weatherDescription = document.getElementById("weatherDescription");
   hourlyContainer.innerHTML = "";
   dailyContainer.innerHTML = "";
 
-  // One concise summary
+  // Weather description
   let summarySet = new Set();
   for (let i = 0; i < 6; i++) {
     const desc = data.list[i].weather[0].description;
     summarySet.add(desc);
   }
   const summary = Array.from(summarySet).join(", ");
-  const summaryText = summary.length > 120 ? summary.slice(0, 120) + "..." : summary;
-
-  hourlyContainer.innerHTML += `
-    <div class="mb-3 text-light" style="font-size: 0.9rem; text-align: center;">
-      <em>${summaryText.charAt(0).toUpperCase() + summaryText.slice(1)} expected over the next few hours.</em>
-    </div>
-  `;
+  const summaryText =
+    summary.length > 120 ? summary.slice(0, 120) + "..." : summary;
+  weatherDescription.textContent =
+    summaryText.charAt(0).toUpperCase() +
+    summaryText.slice(1) +
+    " expected over the next few hours.";
 
   // Hourly forecast blocks
   for (let i = 0; i < 6; i++) {
@@ -177,11 +214,13 @@ function renderForecast(data) {
   const dailyKeys = Object.keys(days).slice(0, 7);
   dailyKeys.forEach((date) => {
     const dayData = days[date];
-    const temps = dayData.map(d => d.main.temp);
+    const temps = dayData.map((d) => d.main.temp);
     const min = Math.round(Math.min(...temps));
     const max = Math.round(Math.max(...temps));
     const icon = dayData[0].weather[0].icon;
-    const day = new Date(date).toLocaleDateString("en-US", { weekday: "short" });
+    const day = new Date(date).toLocaleDateString("en-US", {
+      weekday: "short",
+    });
 
     dailyContainer.innerHTML += `
       <div class="col-12 d-flex justify-content-between py-2 border-bottom">

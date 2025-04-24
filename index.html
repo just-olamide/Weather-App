@@ -1,44 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather App</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-</head>
-<body class="bg-dark text-white">
-  <div class="container py-4">
-    <!-- Search Bar -->
-    <div class="mb-4">
-      <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Enter a city">
-    </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+  </head>
+  <body class="bg-dark text-white">
+    <div class="container py-4">
+      <!-- Search Bar -->
+      <div class="mb-4">
+        <input type="text" id="searchInput" class="form-control form-control-lg"placeholder="Enter a city"/>
+      </div>
 
-    <!-- Top Weather Info -->
-    <div class="text-center mb-4">
-      <h1 id="location">--</h1>
-      <h2 id="temperature">--&deg;</h2>
-      <p id="condition">--</p>
-      <small id="high-low">L: --&deg; H: --&deg;</small>
-    </div>
+      <!-- Top Weather Info -->
+      <div class="text-center mb-4">
+        <h1 id="location">--</h1>
+        <h2 id="temperature">--&deg;</h2>
+        <p id="condition">--</p>
+        <small id="high-low">L: --&deg; H: --&deg;</small>
+      </div>
 
-    <!-- Hourly Forecast -->
-    <div class="card bg-dark bg-opacity-50 rounded-4 p-3 mb-4" id="days">
-      <div class="d-flex justify-content-between text-center overflow-auto" id="hourlyForecast">
-        <!-- JavaScript will inject hourly forecast blocks here -->
+      <!-- Weather Description -->
+      <div class="weather-summary mb-3">
+        <p id="weatherDescription" class="text-center"></p>
+      </div>
+
+      <!-- Hourly Forecast -->
+      <div class="card bg-dark bg-opacity-50 rounded-4 p-3 mb-4" id="days">
+        <div
+          class="d-flex justify-content-between text-center overflow-auto"
+          id="hourlyForecast"
+        >
+          <!-- JavaScript will inject hourly forecast blocks here -->
+        </div>
+      </div>
+
+      <!-- 7 Day Forecast -->
+      <div class="card bg-dark bg-opacity-50 rounded-4 p-3">
+        <div class="row" id="dailyForecast">
+          <!-- JavaScript will inject daily forecast cards here -->
+        </div>
       </div>
     </div>
 
-    <!-- 7 Day Forecast -->
-    <div class="card bg-dark bg-opacity-50 rounded-4 p-3">
-      <div class="row" id="dailyForecast">
-        <!-- JavaScript will inject daily forecast cards here -->
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
